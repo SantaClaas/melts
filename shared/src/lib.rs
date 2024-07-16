@@ -3,26 +3,20 @@ pub mod database;
 
 use std::sync::OnceLock;
 
-pub use crux_core::{bridge::Bridge, Core, Request};
-
 pub use app::*;
 
 
 uniffi::include_scaffolding!("shared");
 
-fn core() -> &'static Bridge<Effect, Counter> {
-    static CORE: OnceLock<Bridge<Effect, Counter>> = OnceLock::new();
-    CORE.get_or_init(|| Bridge::new(Core::new()))
+struct Counter {
+    count: isize,
 }
 
-pub fn process_event(data: &[u8]) -> Vec<u8> {
-    core().process_event(data)
+fn core() -> &'static Counter {
+    static CORE: OnceLock<Counter> = OnceLock::new();
+    CORE.get_or_init(|| Counter { count: 0 })
 }
 
-pub fn handle_response(id: u32, data: &[u8]) -> Vec<u8> {
-    core().handle_response(id, data)
-}
-
-pub fn view() -> Vec<u8> {
-    core().view()
+fn increment() -> i32 {
+    3
 }

@@ -10,7 +10,7 @@ android {
     namespace = "com.example.simple_counter.shared"
     compileSdk = 34
 
-    ndkVersion = "27.0.11902837"
+    ndkVersion = "26.3.11579264"
 
     defaultConfig {
         minSdk = 33
@@ -40,7 +40,7 @@ android {
     sourceSets {
 //        main.java.srcDirs += "${projectDir}/../../shared_types/generated/java"
         named("main") {
-            java.srcDirs("${projectDir}/../../shared_types/generated/java")
+            java.srcDirs("${projectDir}/../../shared/generated/java")
         }
     }
 }
@@ -85,7 +85,7 @@ afterEvaluate {
         }
 
         tasks.named("compileDebugKotlin") {
-            dependsOn(tasks.named("typesGen"), tasks.named("bindGen"))
+            dependsOn(tasks.named("bindGen"))
         }
 
         tasks.named("generate${productFlavor}${buildType}Assets") {
@@ -95,7 +95,7 @@ afterEvaluate {
 }
 
 tasks.register<Exec>("bindGen") {
-    val outDir = "${projectDir}/../../shared_types/generated/java"
+    val outDir = "${projectDir}/../../shared/generated/java"
     workingDir = File("../../")
     if (System.getProperty("os.name").lowercase(Locale.getDefault()).contains("windows")) {
         commandLine(
@@ -115,14 +115,5 @@ tasks.register<Exec>("bindGen") {
                 --out-dir $outDir
                 """
         )
-    }
-}
-
-tasks.register<Exec>("typesGen") {
-    workingDir = File("../../")
-    if (System.getProperty("os.name").lowercase(Locale.getDefault()).contains("windows")) {
-        commandLine("cmd", "/c", "cargo build -p shared_types")
-    } else {
-        commandLine("sh", "-c", "cargo build -p shared_types")
     }
 }

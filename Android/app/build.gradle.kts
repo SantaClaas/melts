@@ -52,6 +52,7 @@ android {
 dependencies {
     // our shared library
     implementation(project(path = ":shared"))
+    implementation("net.java.dev.jna:jna:5.14.0@aar")
 
 
     val composeBom = platform("androidx.compose:compose-bom:2024.06.00")
