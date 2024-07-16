@@ -1,6 +1,0 @@
-node_modules/
-dist/
-target/
-static/
-.parcel-cache
-package-json.lock
