@@ -14,7 +14,6 @@ typegen = ["crux_core/typegen"]
 [dependencies]
 crux_core.workspace = true
 serde = { workspace = true, features = ["derive"] }
-lazy_static = "1.5.0"
 uniffi = "0.28.0"
 wasm-bindgen = "0.2.92"
 libsql = { version = "0.4.0", features = ["encryption"] }

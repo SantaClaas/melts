@@ -2,20 +2,14 @@ pub mod app;
 pub mod database;
 
 use std::sync::OnceLock;
-use lazy_static::lazy_static;
 use wasm_bindgen::prelude::wasm_bindgen;
 
 pub use crux_core::{bridge::Bridge, Core, Request};
 
 pub use app::*;
 
-// TODO hide this plumbing
 
 uniffi::include_scaffolding!("shared");
-//
-// lazy_static! {
-//     static ref CORE: Bridge<Effect, Counter> = Bridge::new(Core::new());
-// }
 
 fn core() -> &'static Bridge<Effect, Counter> {
     static CORE: OnceLock<Bridge<Effect, Counter>> = OnceLock::new();
