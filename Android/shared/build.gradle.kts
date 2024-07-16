@@ -1,3 +1,5 @@
+import java.util.Locale
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -15,7 +17,7 @@ android {
         targetSdk = 34
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles(  "consumer-rules.pro" )
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -71,10 +73,16 @@ afterEvaluate {
     // The `cargoBuild` task isn"t available until after evaluation.
     android.libraryVariants.configureEach {
         var productFlavor = ""
-        productFlavors.forEach {
-            productFlavor += "${it.name.capitalize()}"
+        productFlavors.forEach { flavor ->
+            productFlavor += flavor.name.replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(
+                    Locale.getDefault()
+                ) else it.toString()
+            }
         }
-        val buildType = "${buildType.name.capitalize()}"
+        val buildType = buildType.name.replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+        }
 
         tasks.named("compileDebugKotlin") {
             dependsOn(tasks.named("typesGen"), tasks.named("bindGen"))
@@ -89,7 +97,7 @@ afterEvaluate {
 tasks.register<Exec>("bindGen") {
     val outDir = "${projectDir}/../../shared_types/generated/java"
     workingDir = File("../../")
-    if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+    if (System.getProperty("os.name").lowercase(Locale.getDefault()).contains("windows")) {
         commandLine(
             "cmd", "/c",
             "cargo build -p shared && " + "target\\debug\\uniffi-bindgen generate shared\\src\\shared.udl " + "--language kotlin " + "--out-dir " + outDir.replace(
@@ -112,7 +120,7 @@ tasks.register<Exec>("bindGen") {
 
 tasks.register<Exec>("typesGen") {
     workingDir = File("../../")
-    if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+    if (System.getProperty("os.name").lowercase(Locale.getDefault()).contains("windows")) {
         commandLine("cmd", "/c", "cargo build -p shared_types")
     } else {
         commandLine("sh", "-c", "cargo build -p shared_types")
