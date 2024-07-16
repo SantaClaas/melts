@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Counter"
-include ':app'
-include ':shared'
+include(":app")
+include(":shared")
