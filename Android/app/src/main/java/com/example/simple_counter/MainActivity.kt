@@ -20,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,6 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.simple_counter.ui.theme.CounterTheme
 import com.example.simple_counter.shared.increment
+import com.example.simple_counter.shared.openDatabase
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +55,8 @@ fun View() {
         mutableStateOf("none")
     }
 
+    val scope = rememberCoroutineScope()
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -65,6 +70,9 @@ fun View() {
             Button(onClick = {
                 val increment = increment()
                 state += "Increment $increment"
+                scope.launch {
+                    state = openDatabase(path)
+                }
             }) {
                 Text("Open database", color = Color.White)
             }

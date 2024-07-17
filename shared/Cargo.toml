@@ -2,7 +2,7 @@
 name = "shared"
 version = "0.1.0"
 edition = "2021"
-rust-version = "1.66"
+#rust-version = "1.66"
 
 [lib]
 crate-type = ["lib", "staticlib", "cdylib"]
@@ -10,7 +10,16 @@ name = "shared"
 
 [dependencies]
 uniffi = "0.28.0"
-libsql = { version = "0.4", features = ["encryption"] }
+# Encryption does not work on android :(
+#libsql = { version = "0.5.0-alpha.2", features = [] }
+rusqlite = { version = "0.31.0", features = [
+    # Does not find openssl/crypto.h
+    #    "bundled-sqlcipher",
+    "bundled-sqlcipher-vendored-openssl",
+    #    "bundled-full"
+    #    "sqlcipher"
+    "bundled",
+] }
 
 [target.uniffi-bindgen.dependencies]
 uniffi = { version = "0.28.0", features = ["cli"] }

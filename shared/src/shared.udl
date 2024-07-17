@@ -1,4 +1,7 @@
 namespace shared {
 
    i32 increment();
+
+   [Async]
+   string open_database(string path);
 };
