@@ -15,9 +15,11 @@ uniffi = "0.28.0"
 rusqlite = { version = "0.31.0", features = [
     # Does not find openssl/crypto.h
     #    "bundled-sqlcipher",
-    "bundled-sqlcipher-vendored-openssl",
     #    "bundled-full"
     #    "sqlcipher"
+
+    # This works but only when running cargo-ndk. Not through cargo build gradle plugin
+    "bundled-sqlcipher-vendored-openssl",
     "bundled",
 ] }
 

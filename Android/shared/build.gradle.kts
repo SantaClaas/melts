@@ -3,7 +3,7 @@ import java.util.Locale
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id("org.mozilla.rust-android-gradle.rust-android")
+//    id("org.mozilla.rust-android-gradle.rust-android")
 }
 
 android {
@@ -41,7 +41,13 @@ android {
 //        main.java.srcDirs += "${projectDir}/../../shared_types/generated/java"
         named("main") {
             java.srcDirs("${projectDir}/../../shared/generated/java")
+// TODO just for testing include manually build in sources
         }
+//        named("jniLibs") {
+//            java.srcDirs(layout.buildDirectory.get().file("/rustJniLibs/android/arm64-v8a/libshared.so"))
+//        }
+
+
     }
 }
 
@@ -56,41 +62,42 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
 }
 
-//apply plugin: "org.mozilla.rust-android-gradle.rust-android"
-apply(plugin = "org.mozilla.rust-android-gradle.rust-android")
-cargo {
-    module = "../.."
-    libname = "shared"
-    // these are the four recommended targets for Android that will ensure your library works on all mainline android devices
-    // make sure you have included the rust toolchain for each of these targets: \
-    // `rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android`
-    targets = listOf("arm", "arm64", "x86", "x86_64")
-    extraCargoBuildArguments = listOf("--package", "shared")
-    pythonCommand = "python3"
-}
+//apply(plugin = "org.mozilla.rust-android-gradle.rust-android")
+//cargo {
+//    module = "../.."
+//    libname = "shared"
+//    // these are the four recommended targets for Android that will ensure your library works on all mainline android devices
+//    // make sure you have included the rust toolchain for each of these targets: \
+//    // `rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android`
+//    targets = listOf("arm", "arm64", "x86", "x86_64")
+//    extraCargoBuildArguments = listOf("--package", "shared")
+//    pythonCommand = "python3"
+//    prebuiltToolchains = true
+//}
 
 afterEvaluate {
     // The `cargoBuild` task isn"t available until after evaluation.
     android.libraryVariants.configureEach {
-        var productFlavor = ""
-        productFlavors.forEach { flavor ->
-            productFlavor += flavor.name.replaceFirstChar {
-                if (it.isLowerCase()) it.titlecase(
-                    Locale.getDefault()
-                ) else it.toString()
-            }
-        }
-        val buildType = buildType.name.replaceFirstChar {
-            if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
-        }
+//        var productFlavor = ""
+//        productFlavors.forEach { flavor ->
+//            productFlavor += flavor.name.replaceFirstChar {
+//                if (it.isLowerCase()) it.titlecase(
+//                    Locale.getDefault()
+//                ) else it.toString()
+//            }
+//        }
+//        val buildType = buildType.name.replaceFirstChar {
+//            if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+//        }
 
         tasks.named("compileDebugKotlin") {
             dependsOn(tasks.named("bindGen"))
         }
 
-        tasks.named("generate${productFlavor}${buildType}Assets") {
-            dependsOn(tasks.named("cargoBuild"))
-        }
+
+//        tasks.named("generate${productFlavor}${buildType}Assets") {
+//            dependsOn(tasks.named("cargoBuild"))
+//        }
     }
 }
 
